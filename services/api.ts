@@ -14,13 +14,25 @@ function formatApiErrors(err: ApiErrorResponse) {
     return lines.join("\n");
 }
 
+function getToken(): string | null {
+    if (typeof window === "undefined") return null;
+    try {
+        return localStorage.getItem("eventmanager_token");
+    } catch {
+        return null;
+    }
+}
+
 export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
-    if (!BASE) throw new Error("NEXT_PUBLIC_API_BASE_URL não configurada");
+    if (!BASE) throw new Error("NEXT_PUBLIC_API_BASE_URL not configured");
+
+    const token = getToken();
 
     const res = await fetch(`${BASE}${path}`, {
         ...init,
         headers: {
             "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
             ...(init.headers ?? {}),
         },
     });
@@ -31,6 +43,7 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
             const parsed = JSON.parse(text) as ApiErrorResponse;
             throw new Error(formatApiErrors(parsed) || `HTTP ${res.status}`);
         } catch {
+            if (res.status === 401) throw new Error("Not authenticated, please log in.");
             throw new Error(text || `HTTP ${res.status}`);
         }
     }
