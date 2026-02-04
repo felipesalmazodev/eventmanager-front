@@ -6,12 +6,15 @@ type ApiErrorResponse = {
     errors: Record<string, string[]>;
 };
 
-function formatApiErrors(err: ApiErrorResponse) {
-    const lines: string[] = [];
-    for (const [field, msgs] of Object.entries(err.errors ?? {})) {
-        for (const m of msgs) lines.push(`${field}: ${m}`);
+function formatApiErrors(err: ApiErrorResponse): string {
+    const errors = err.errors ?? {};
+
+    const firstFieldErrors = Object.values(errors)[0];
+    if (!firstFieldErrors || firstFieldErrors.length === 0) {
+        return "";
     }
-    return lines.join("\n");
+
+    return firstFieldErrors[0];
 }
 
 function getToken(): string | null {
@@ -39,11 +42,15 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
 
     if (!res.ok) {
         const text = await res.text().catch(() => "");
+
+        if (res.status === 401) throw new Error("Not authenticated, please log in.");
+
         try {
             const parsed = JSON.parse(text) as ApiErrorResponse;
-            throw new Error(formatApiErrors(parsed) || `HTTP ${res.status}`);
-        } catch {
-            if (res.status === 401) throw new Error("Not authenticated, please log in.");
+            const msg = formatApiErrors(parsed) || `HTTP ${res.status}`;
+            throw new Error(msg);
+        } catch (err: any) {
+            if (err instanceof Error && err.message) throw err;
             throw new Error(text || `HTTP ${res.status}`);
         }
     }
