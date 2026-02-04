@@ -1,45 +1,50 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { clearToken, getToken } from "@/services/auth";
 import { api } from "@/services/api";
+import { useAuth } from "@/hooks/useAuth";
 
-const PUBLIC_PATHS = new Set<string>([
-    "/login",
-    "/auth/callback",
-]);
+const PUBLIC_PATHS = new Set<string>(["/login", "/auth/callback"]);
 
 export function AuthGate({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const pathname = usePathname();
+    const { isAuthenticated, logout } = useAuth();
     const [ready, setReady] = useState(false);
 
+    const isPublic = useMemo(() => PUBLIC_PATHS.has(pathname), [pathname]);
+
     useEffect(() => {
-        async function check() {
-            if (PUBLIC_PATHS.has(pathname)) {
-                setReady(true);
-                return;
-            }
 
-            const token = getToken();
-            if (!token) {
-                router.replace("/login");
-                return;
-            }
+        if (isPublic) {
+            setReady(true);
+            return;
+        }
 
+        if (!isAuthenticated) {
+            router.replace("/login");
+            return;
+        }
+
+        (async () => {
             try {
                 await api<any>("/api/auth/me", { method: "GET" });
                 setReady(true);
             } catch {
-                clearToken();
+                logout();
                 router.replace("/login");
             }
-        }
+        })();
+    }, [isPublic, isAuthenticated, router, logout]);
 
-        check();
-    }, [pathname, router]);
+    if (!ready) {
+        return (
+            <div className="container py-5">
+                <p className="text-muted">Loading…</p>
+            </div>
+        );
+    }
 
-    if (!ready) return null;
     return <>{children}</>;
 }

@@ -1,12 +1,26 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { getGoogleLoginUrl } from "@/services/auth";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function LoginPage() {
+    const router = useRouter();
+    const { isAuthenticated } = useAuth();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            router.replace("/");
+        }
+    }, [isAuthenticated, router]);
+
     function login() {
         const url = getGoogleLoginUrl();
         window.location.href = url;
     }
+
+    if (isAuthenticated) return null;
 
     return (
         <div className="container py-5" style={{ maxWidth: 520 }}>

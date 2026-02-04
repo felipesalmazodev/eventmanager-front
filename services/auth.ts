@@ -2,15 +2,19 @@ export const TOKEN_KEY = "eventmanager_token";
 
 export function getToken(): string | null {
     if (typeof window === "undefined") return null;
-    try { return localStorage.getItem(TOKEN_KEY); } catch { return null; }
+
+    const { getAuthToken } = require("@/stores/auth-store") as typeof import("@/stores/auth-store");
+    return getAuthToken();
 }
 
 export function setToken(token: string) {
-    localStorage.setItem(TOKEN_KEY, token);
+    const { useAuthStore } = require("@/stores/auth-store") as typeof import("@/stores/auth-store");
+    useAuthStore.getState().setToken(token);
 }
 
 export function clearToken() {
-    localStorage.removeItem(TOKEN_KEY);
+    const { useAuthStore } = require("@/stores/auth-store") as typeof import("@/stores/auth-store");
+    useAuthStore.getState().logout();
 }
 
 export function getGoogleLoginUrl() {

@@ -1,3 +1,5 @@
+import { getAuthToken, useAuthStore } from "@/stores/auth-store";
+
 const BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 type ApiErrorResponse = {
@@ -8,28 +10,15 @@ type ApiErrorResponse = {
 
 function formatApiErrors(err: ApiErrorResponse): string {
     const errors = err.errors ?? {};
-
     const firstFieldErrors = Object.values(errors)[0];
-    if (!firstFieldErrors || firstFieldErrors.length === 0) {
-        return "";
-    }
-
+    if (!firstFieldErrors || firstFieldErrors.length === 0) return "";
     return firstFieldErrors[0];
-}
-
-function getToken(): string | null {
-    if (typeof window === "undefined") return null;
-    try {
-        return localStorage.getItem("eventmanager_token");
-    } catch {
-        return null;
-    }
 }
 
 export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
     if (!BASE) throw new Error("NEXT_PUBLIC_API_BASE_URL not configured");
 
-    const token = getToken();
+    const token = typeof window === "undefined" ? null : getAuthToken();
 
     const res = await fetch(`${BASE}${path}`, {
         ...init,
@@ -43,7 +32,10 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
     if (!res.ok) {
         const text = await res.text().catch(() => "");
 
-        if (res.status === 401) throw new Error("Not authenticated, please log in.");
+        if (res.status === 401) {
+            if (typeof window !== "undefined") useAuthStore.getState().logout();
+            throw new Error("Not authenticated, please log in.");
+        }
 
         try {
             const parsed = JSON.parse(text) as ApiErrorResponse;
@@ -54,7 +46,6 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
             throw new Error(text || `HTTP ${res.status}`);
         }
     }
-
 
     if (res.status === 204) return undefined as T;
 

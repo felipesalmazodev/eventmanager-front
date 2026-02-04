@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { setToken } from "@/services/auth";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function AuthCallbackPage() {
     const router = useRouter();
     const params = useSearchParams();
+    const { login } = useAuth();
+
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -19,21 +21,21 @@ export default function AuthCallbackPage() {
         }
 
         if (!token) {
-            setError("Token não encontrado na URL de callback.");
+            setError("Token not found on the callback URL.");
             return;
         }
 
-        setToken(token);
+        login(token);
         router.replace("/");
-    }, [params, router]);
+    }, [params, router, login]);
 
     return (
         <div className="container py-5" style={{ maxWidth: 520 }}>
-            <h1 className="h5 mb-3">Finalizando login…</h1>
+            <h1 className="h5 mb-3">Finalizing login…</h1>
             {error ? (
                 <div className="alert alert-danger">{error}</div>
             ) : (
-                <p className="text-muted">Aguarde, redirecionando…</p>
+                <p className="text-muted">Wait, redirecting</p>
             )}
         </div>
     );
