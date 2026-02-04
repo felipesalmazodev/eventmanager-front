@@ -1,5 +1,7 @@
 import { getAuthToken, useAuthStore } from "@/stores/auth-store";
 
+// This service handles all the requests for the backend 
+
 const BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 type ApiErrorResponse = {
@@ -8,6 +10,7 @@ type ApiErrorResponse = {
     errors: Record<string, string[]>;
 };
 
+// This function formats the erros coming from the backend whenever a exception is thrown
 function formatApiErrors(err: ApiErrorResponse): string {
     const errors = err.errors ?? {};
     const firstFieldErrors = Object.values(errors)[0];

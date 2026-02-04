@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getGoogleLoginUrl } from "@/services/auth";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function LoginPage() {
@@ -34,4 +33,10 @@ export default function LoginPage() {
             </button>
         </div>
     );
+}
+
+function getGoogleLoginUrl() {
+    const base = process.env.NEXT_PUBLIC_API_BASE_URL;
+    if (!base) throw new Error("NEXT_PUBLIC_API_BASE_URL not configured");
+    return `${base}/oauth2/authorization/google`;
 }

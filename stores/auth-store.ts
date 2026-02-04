@@ -3,6 +3,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+// This module is responsible for creating the auth store that manages the token and authentication state
+
 const TOKEN_KEY = "eventmanager_token";
 
 type AuthState = {

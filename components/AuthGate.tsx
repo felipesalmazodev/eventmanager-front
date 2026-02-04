@@ -7,6 +7,9 @@ import { useAuth } from "@/hooks/useAuth";
 
 const PUBLIC_PATHS = new Set<string>(["/login", "/auth/callback"]);
 
+// The authgate wrappers all pages because he is the responsible for checking if the user is logged in or not
+// The function calls and endpoint on the backend for testing the jwt token.
+
 export function AuthGate({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const pathname = usePathname();

@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+//This service calls ViaCep and shows the address information about the CEP on PlaceForm
+
 export async function GET(
     _req: Request,
     context: { params: Promise<{ cep: string }> }
