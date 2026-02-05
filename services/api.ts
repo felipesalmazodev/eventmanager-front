@@ -1,4 +1,4 @@
-import { useAuth } from "@/hooks/useAuth";
+import { getAuthToken, useAuthStore } from "@/stores/auth-store";
 
 // This service handles all the requests for the backend 
 
@@ -21,15 +21,13 @@ function formatApiErrors(err: ApiErrorResponse): string {
 export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
     if (!BASE) throw new Error("NEXT_PUBLIC_API_BASE_URL not configured");
 
-    const { token, logout } = useAuth();
-
-    const userToken = typeof window === "undefined" ? null : token;
+    const token = typeof window === "undefined" ? null : getAuthToken();
 
     const res = await fetch(`${BASE}${path}`, {
         ...init,
         headers: {
             "Content-Type": "application/json",
-            ...(userToken ? { Authorization: `Bearer ${userToken}` } : {}),
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
             ...(init.headers ?? {}),
         },
     });
@@ -38,7 +36,7 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
         const text = await res.text().catch(() => "");
 
         if (res.status === 401) {
-            if (typeof window !== "undefined") logout();
+            if (typeof window !== "undefined") useAuthStore.getState().logout();
             throw new Error("Not authenticated, please log in.");
         }
 
