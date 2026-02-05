@@ -45,6 +45,8 @@ export function PlaceForm({
         register,
         handleSubmit,
         watch,
+        setError,
+        clearErrors,
         formState: { errors },
     } = useForm<PlaceFormInput>({
         resolver: zodResolver(placeSchema),
@@ -61,6 +63,7 @@ export function PlaceForm({
     });
 
     const cep = watch("cep");
+    const cepIsValidFormat = /^\d{8}$/.test(cep ?? "");
 
     const [address, setAddress] = useState<ViaCepAddress | null>(null);
     const [addressError, setAddressError] = useState<string | null>(null);
@@ -73,7 +76,12 @@ export function PlaceForm({
         setAddress(null);
         setAddressError(null);
 
-        if (!/^\d{8}$/.test(debouncedCep ?? "")) return;
+        // If CEP isn't valid format yet, we don't validate via ViaCEP
+        if (!/^\d{8}$/.test(debouncedCep ?? "")) {
+            // clear manual ViaCEP error if user is still typing
+            // (keep Zod errors if any)
+            return;
+        }
 
         const t = setTimeout(async () => {
             try {
@@ -93,18 +101,41 @@ export function PlaceForm({
                     localidade: data.localidade,
                     uf: data.uf,
                 });
+
+                // ViaCEP validation OK -> clear any manual CEP error
+                clearErrors("cep");
             } catch (e: any) {
+                const msg = e?.message ?? "Unable to validate CEP";
                 setAddress(null);
-                setAddressError(e?.message ?? "Unable to validate CEP");
+                setAddressError(msg);
+
+                // Block submit by marking CEP as invalid in the form
+                setError("cep", { type: "manual", message: msg });
             } finally {
                 setLoadingAddress(false);
             }
         }, debounceMs);
 
         return () => clearTimeout(t);
-    }, [debouncedCep]);
+    }, [debouncedCep, clearErrors, setError]);
 
     const submit: SubmitHandler<PlaceFormInput> = async (values) => {
+        // If CEP has valid format, require ViaCEP to succeed before allowing submit
+        if (cepIsValidFormat) {
+            if (loadingAddress) {
+                setError("cep", { type: "manual", message: "Validating CEP, please wait..." });
+                return;
+            }
+            if (addressError) {
+                setError("cep", { type: "manual", message: addressError });
+                return;
+            }
+            if (!address) {
+                setError("cep", { type: "manual", message: "Please validate the CEP before saving." });
+                return;
+            }
+        }
+
         const parsed: PlaceFormOutput = placeSchema.parse(values);
 
         const payload: PlaceUpsertRequest = {
@@ -115,6 +146,10 @@ export function PlaceForm({
 
         await onSubmit(payload);
     };
+
+    const disableSubmit =
+        !!submitting ||
+        (cepIsValidFormat && (loadingAddress || !!addressError || !address));
 
     return (
         <form onSubmit={handleSubmit(submit)} className="row g-3">
@@ -195,7 +230,7 @@ export function PlaceForm({
             </div>
 
             <div className="col-12 d-flex gap-2">
-                <button className="btn btn-primary" type="submit" disabled={!!submitting}>
+                <button className="btn btn-primary" type="submit" disabled={disableSubmit}>
                     {submitLabel}
                 </button>
             </div>
