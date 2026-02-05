@@ -161,51 +161,6 @@ and state management**.
 
 ------------------------------------------------------------------------
 
-## Environment Variables
-
-Copy the example file and create your own `.env`:
-
-``` bash
-cp .env.example .env.local
-```
-
-Then configure:
-
-``` env
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
-```
-
-### Important Notes
-
--   When running **locally**, your **backend and databases must be
-    running**
--   When deploying to **Vercel**, your **backend must be public**
--   The `NEXT_PUBLIC_API_BASE_URL` **must point to the public backend
-    URL** in production
--   Always remember to copy `.env.example` to `.env.local`
-
-------------------------------------------------------------------------
-
-## Running the Project Locally
-
-Install dependencies:
-
-``` bash
-npm install
-```
-
-Run the development server:
-
-``` bash
-npm run dev
-```
-
-Open in your browser:
-
-    http://localhost:3000
-
-------------------------------------------------------------------------
-
 ## Authentication Flow (Simplified)
 
     Frontend (/login)
@@ -235,6 +190,53 @@ Open in your browser:
 -   Forms use this to auto-fill address fields when the user enters a
     CEP
 
+------------------------------------------------------------------------
+
+## Running the Project Locally
+
+Clone the repository:
+
+```bash
+git clone https://github.com/felipesalmazodev/eventmanager-front.git
+cd eventmanager-back
+```
+
+Copy the example file and create your own `.env`:
+
+``` bash
+cp .env.example .env.local
+```
+
+Then configure:
+
+``` env
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
+```
+
+Install dependencies:
+
+``` bash
+npm install
+```
+
+Run the development server:
+
+``` bash
+npm run dev
+```
+
+Open in your browser:
+
+    http://localhost:3000
+
+### Important Notes
+
+-   When running **locally**, the **backend and databases must be
+    running**
+-   When deploying to **Vercel**, the **backend must be public**
+-   The `NEXT_PUBLIC_API_BASE_URL` **must point to the public backend
+    URL** in production
+-   Always remember to copy `.env.example` to `.env.local`
 ------------------------------------------------------------------------
 
 ## Deployment (Vercel)
@@ -290,6 +292,6 @@ should be auto-filled.
 
 ## Final Notes
 
--   Always copy `.env.example` to `.env`
+-   Always copy `.env.example` to `.env.local`
 -   Local testing requires backend + databases running
 -   Production requires a **public backend URL**
