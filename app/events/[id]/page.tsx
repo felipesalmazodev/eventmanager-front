@@ -58,8 +58,8 @@ export default function EventDetailsPage() {
                     </div>
 
                     <div className="card mb-3">
-                        <div className="card-header d-flex justify-content-between align-items-center">
-                            <span>Place</span>
+                        <div className="card-header bg-dark d-flex justify-content-between align-items-center">
+                            <span className="text-white">Place</span>
 
                             <div className="form-check form-switch m-0">
                                 <input
@@ -70,7 +70,7 @@ export default function EventDetailsPage() {
                                     onChange={(e) => setEnrich(e.target.checked)}
                                     id="enrichSwitch"
                                 />
-                                <label className="form-check-label" htmlFor="enrichSwitch">
+                                <label className="form-check-label text-white" htmlFor="enrichSwitch">
                                     Enrich address (ViaCEP)
                                 </label>
                             </div>

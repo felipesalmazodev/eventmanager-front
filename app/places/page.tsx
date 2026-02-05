@@ -60,8 +60,8 @@ export default function PlacesPage() {
             {error && <div className="alert alert-danger" style={{ whiteSpace: "pre-wrap" }}>{error}</div>}
 
             <div className="table-responsive">
-                <table className="table table-striped align-middle">
-                    <thead>
+                <table className="table table-hover align-middle">
+                    <thead className="table-dark">
                         <tr>
                             <th>Name</th>
                             <th>Code</th>
@@ -70,7 +70,7 @@ export default function PlacesPage() {
                             <th style={{ width: 220 }}></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="table-group-divider">
                         {places.map((p) => (
                             <tr key={p.id}>
                                 <td>{p.name}</td>

@@ -186,8 +186,8 @@ export function PlaceForm({
 
             <div className="col-12">
                 <div className="card">
-                    <div className="card-header d-flex justify-content-between align-items-center">
-                        <span>Address preview (ViaCEP)</span>
+                    <div className="card-header bg-dark d-flex justify-content-between align-items-center">
+                        <span className="text-white">Address preview (ViaCEP)</span>
                         {loadingAddress && <span className="badge text-bg-secondary">Loading...</span>}
                     </div>
                     <div className="card-body">

@@ -63,8 +63,8 @@ export default function EventsPage() {
             {error && <div className="alert alert-danger" style={{ whiteSpace: "pre-wrap" }}>{error}</div>}
 
             <div className="table-responsive">
-                <table className="table table-striped align-middle">
-                    <thead>
+                <table className="table table-hover align-middle">
+                    <thead className="table-dark">
                         <tr>
                             <th>Name</th>
                             <th>Starts at</th>
@@ -73,13 +73,13 @@ export default function EventsPage() {
                             <th style={{ width: 240 }}></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="table-group-divider">
                         {events.map((ev) => (
                             <tr key={ev.id}>
                                 <td>{ev.name}</td>
                                 <td>{formatDateTime(ev.startsAt)}</td>
                                 <td>{formatDateTime(ev.finishesAt)}</td>
-                                <td>{ev.place?.code}</td>
+                                <td>{ev.place?.name}</td>
                                 <td className="text-end">
                                     <Link className="btn btn-outline-secondary btn-sm me-2" href={`/events/${ev.id}`}>
                                         Details

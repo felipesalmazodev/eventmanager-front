@@ -22,15 +22,61 @@ export default function LoginPage() {
     if (isAuthenticated) return null;
 
     return (
-        <div className="container py-5" style={{ maxWidth: 520 }}>
-            <h1 className="h3 mb-3">Login</h1>
-            <p className="text-muted">
-                Log in with a Google account to access Event Manager
-            </p>
+        <div className="container-fluid min-vh-100 p-0">
+            <div className="row g-0 min-vh-100">
+                <div className="col-md-7 d-flex flex-column justify-content-center p-5">
+                    <h1
+                        className="display-4 fw-bold mb-3"
+                        style={{
+                            textShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                        }}
+                    >
+                        Event Manager
+                    </h1>
 
-            <button className="btn btn-outline-dark w-100" onClick={login}>
-                Google login
-            </button>
+                    <p
+                        className="lead mb-4"
+                        style={{
+                            textShadow: "0 2px 8px rgba(0,0,0,0.12)",
+                        }}
+                    >
+                        Organize your events in one place.
+                    </p>
+
+                    <p
+                        className="text-muted"
+                        style={{
+                            maxWidth: 520,
+                        }}
+                    >
+                        Create events, manage locations and avoid conflicts with a clean,
+                        modern and easy-to-use interface designed to simplify your workflow.
+                    </p>
+                </div>
+
+                <div className="col-md-5 d-flex justify-content-center align-items-center bg-light">
+                    <div className="card shadow-lg w-100" style={{ maxWidth: 420 }}>
+                        <div className="card-body p-4 p-md-5">
+                            <h2 className="h4 mb-3">Welcome!</h2>
+                            <p className="text-muted mb-4">
+                                Sign in with your Google account to continue
+                            </p>
+
+                            <button className="btn btn-dark w-100 py-2" onClick={login}>
+                                <i className="bi bi-google me-2" />
+                                Continue with Google
+                            </button>
+
+                            <p
+                                className="text-center text-muted mt-4 mb-0"
+                                style={{ fontSize: 14 }}
+                            >
+                                Secure login powered by Google OAuth
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
