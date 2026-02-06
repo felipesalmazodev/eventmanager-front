@@ -8,7 +8,7 @@ event management, place management, and address enrichment via ViaCEP.
 
 The application focuses on: - Secure authentication with Google OAuth -
 Integration with a REST API backend - Form handling and validation with
-React Hook Form - Global state management with Zustand - Clean
+React Hook Form and Zod - Global state management with Zustand - Clean
 separation between pages, components, services, hooks, and store
 
 ------------------------------------------------------------------------
@@ -23,7 +23,7 @@ separation between pages, components, services, hooks, and store
 -   **Authentication Handling**
     -   Token stored in `localStorage`
     -   Protected routes for authenticated areas
-    -   Logout clears token and session
+    -   Logout clears token
     -   Centralized auth state using Zustand
 -   **ViaCEP Integration**
     -   The frontend exposes an internal API route to fetch CEP data
