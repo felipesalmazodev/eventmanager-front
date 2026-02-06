@@ -17,7 +17,7 @@ export default function PlacesPage() {
             setError(null);
             setPlaces(await placesService.list());
         } catch (e: any) {
-            setError(e?.message ?? "Erro on loading places");
+            setError(e?.message ?? "Error on loading places");
         }
     }
 

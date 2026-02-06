@@ -18,7 +18,7 @@ export default function NewPlacePage() {
             await placesService.create(values);
             router.push("/places");
         } catch (e: any) {
-            setError(e?.message ?? "Erro ao criar place");
+            setError(e?.message ?? "Error at creating place");
         } finally {
             setSubmitting(false);
         }

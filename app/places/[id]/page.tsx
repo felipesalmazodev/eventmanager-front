@@ -17,7 +17,7 @@ export default function PlaceDetailsPage() {
             setError(null);
             setData(await placesService.get(placeId));
         } catch (e: any) {
-            setError(e?.message ?? "Erro ao carregar detalhes");
+            setError(e?.message ?? "Error on loading details");
         }
     }
 

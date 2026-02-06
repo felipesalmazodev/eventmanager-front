@@ -24,7 +24,7 @@ export default function EditPlacePage() {
             setError(null);
             setInitial(await placesService.get(placeId));
         } catch (e: any) {
-            setError(e?.message ?? "Erro ao carregar place");
+            setError(e?.message ?? "Error on loading place");
         }
     }
 
@@ -35,7 +35,7 @@ export default function EditPlacePage() {
             await placesService.update(id, values);
             router.push("/places");
         } catch (e: any) {
-            setError(e?.message ?? "Erro ao atualizar place");
+            setError(e?.message ?? "Error on updating place");
         } finally {
             setSubmitting(false);
         }
