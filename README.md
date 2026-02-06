@@ -108,34 +108,6 @@ and state management**.
 
 ------------------------------------------------------------------------
 
-## Core Folders
-
-    components/
-     ├── Header.tsx
-     │   # Application header with logo and logout button
-     └── ProtectedRoute.tsx
-         # Route guard for authenticated pages
-
-    services/
-     ├── api.ts
-     │   # Centralized fetch wrapper with Authorization header and error handling
-     ├── authService.ts
-     │   # Authentication-related API calls
-     ├── eventsService.ts
-     │   # Events API integration
-     └── placesService.ts
-         # Places API integration
-
-    hooks/
-     └── useAuth.ts
-         # Authentication helper hook
-
-    store/
-     └── authStore.ts
-         # Zustand store for authentication state (token, login, logout, etc.)
-
-------------------------------------------------------------------------
-
 ## Architectural Overview
 
 -   **app/**\
@@ -198,10 +170,10 @@ Clone the repository:
 
 ```bash
 git clone https://github.com/felipesalmazodev/eventmanager-front.git
-cd eventmanager-back
+cd eventmanager-front
 ```
 
-Copy the example file and create your own `.env`:
+Copy the example file and create your own `.env.local`:
 
 ``` bash
 cp .env.example .env.local
@@ -263,6 +235,7 @@ NEXT_PUBLIC_API_BASE_URL = https://your-public-backend-url
 -   The frontend **will not work** if the backend is only available
     locally
 -   Make sure CORS is properly configured in your backend
+-   Make sure that the redirect URL on the Oauth client is the public one
 
 ------------------------------------------------------------------------
 
